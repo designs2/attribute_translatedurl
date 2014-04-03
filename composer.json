@@ -38,17 +38,17 @@
 	],
 	"support": {
 		"email": "mail@metamodel.me",
-		"issues": "https://github.com/MetaModels/attribute_select/issues",
+		"issues": "https://github.com/backbone87/metamodels-attribute_translatedurl/issues",
 		"wiki": "http://de.contaowiki.org/MetaModels",
 		"irc": "irc://irc.freenode.org/contao.mm",
-		"source":"https://github.com/MetaModels/attribute_select"
+		"source": "https://github.com/backbone87/metamodels-attribute_translatedurl"
 	},
 	"require": {
 		"php": ">=5.3",
 		"contao/core": ">=3.1,<4",
 		"contao-community-alliance/composer-installer": "*",
 		"metamodels/core": ">=1,<2",
-		"metamodels/attribute_select": ">=1,<2"
+		"metamodels/attribute_url": ">=1,<2"
 	},
 	"require-dev": {
 		"cyberspectrum/contao-toolbox": "dev-master"
