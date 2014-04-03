@@ -14,8 +14,8 @@ CREATE TABLE `tl_metamodel_translatedurl` (
   `language` varchar(2) NOT NULL,
 
   `tstamp` int(10) unsigned NOT NULL,
-  `href` varchar(255) unsigned NOT NULL,
-  `title` varchar(255) unsigned NULL,
+  `href` varchar(255) NOT NULL,
+  `title` varchar(255) NULL,
 
   PRIMARY KEY  (`att_id`, `item_id`, `language`),
   KEY `att_lang` (`att_id`, `language`),
