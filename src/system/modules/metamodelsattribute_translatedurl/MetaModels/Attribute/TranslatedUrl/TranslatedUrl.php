@@ -1,25 +1,46 @@
 <?php
 
+/**
+ * The MetaModels extension allows the creation of multiple collections of custom items,
+ * each with its own unique set of selectable attributes, with attribute extendability.
+ * The Front-End modules allow you to build powerful listing and filtering of the
+ * data in each collection.
+ *
+ * PHP version 5
+ * @package    MetaModels
+ * @subpackage AttributeTranslatedUrl
+ * @author     Oliver Hoff <oliver@hofff.com>
+ * @author     Andreas Isaak <info@andreas-isaak.de>
+ * @copyright  The MetaModels team.
+ * @license    LGPL.
+ * @filesource
+ */
+
 namespace MetaModels\Attribute\TranslatedUrl;
 
 use MetaModels\Attribute\TranslatedReference;
 
 /**
- * @author Oliver Hoff <oliver@hofff.com>
+ * @package    MetaModels
+ * @subpackage AttributeTranslatedUrl
+ * @author     Oliver Hoff <oliver@hofff.com>
  */
-class TranslatedUrl extends TranslatedReference {
+class TranslatedUrl extends TranslatedReference 
+{
 
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\Base::getFilterUrlValue()
 	 */
-	public function getFilterUrlValue($value) {
+	public function getFilterUrlValue($value) 
+	{
 		return htmlencode(serialize($value));
 	}
 
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\Base::getAttributeSettingNames()
 	 */
-	public function getAttributeSettingNames() {
+	public function getAttributeSettingNames() 
+	{
 		return array_merge(parent::getAttributeSettingNames(), array(
 			'no_external_link',
 			'mandatory',
@@ -30,15 +51,18 @@ class TranslatedUrl extends TranslatedReference {
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::getValueTable()
 	 */
-	protected function getValueTable() {
+	protected function getValueTable() 
+	{
 		return 'tl_metamodel_translatedurl';
 	}
 
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::valueToWidget()
 	 */
-	public function valueToWidget($value) {
-		if($this->get('trim_title')) {
+	public function valueToWidget($value) 
+	{
+		if($this->get('trim_title')) 
+		{
 			return $value['href'];
 		} else {
 			return array($value['title'], $value['href']);
@@ -48,8 +72,10 @@ class TranslatedUrl extends TranslatedReference {
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::widgetToValue()
 	 */
-	public function widgetToValue($value, $id) {
-		if($this->get('trim_title')) {
+	public function widgetToValue($value, $id) 
+	{
+		if($this->get('trim_title')) 
+		{
 			return array('href' => $value);
 		} else {
 			return array_combine(array('title', 'href'), $value);
@@ -59,15 +85,16 @@ class TranslatedUrl extends TranslatedReference {
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\Base::getFieldDefinition()
 	 */
-	public function getFieldDefinition($overrides = array()) {
+	public function getFieldDefinition($overrides = array()) 
+	{
 		$field = parent::getFieldDefinition($overrides);
 
 		$field['inputType'] = 'text';
 		$field['eval']['tl_class'] .= ' wizard inline';
 
-		if($this->get('trim_title')) {
+		if($this->get('trim_title')) 
+		{
 			$field['wizard']['pagePicker'] = array('MetaModels\Helper\Url\Url', 'singlePagePicker');
-
 		} else {
 			$field['eval']['size'] = 2;
 			$field['eval']['multiple'] = true;
@@ -81,19 +108,22 @@ class TranslatedUrl extends TranslatedReference {
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::getFilterOptions()
 	 */
-	public function getFilterOptions($ids, $usedOnly, &$count = null) {
+	public function getFilterOptions($ids, $usedOnly, &$count = null) 
+	{
 		return array(); // not supported
 	}
 
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::searchForInLanguages()
 	 */
-	public function searchForInLanguages($pattern, $languages = array()) {
+	public function searchForInLanguages($pattern, $languages = array()) 
+	{
 		$pattern = str_replace(array('*', '?'), array('%', '_'), $pattern);
 		$joinTable = $this->getValueTable();
 
 		$languages = (array) $languages;
-		if($languages) {
+		if($languages) 
+		{
 			$languageWildcards = self::generateWildcards($languages);
 			$languageCondition = 'AND language IN (' . $languageWildcards . ')';
 		}
@@ -119,9 +149,12 @@ SQL;
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::sortIds()
 	 */
-	public function sortIds($ids, $direction) {
+	public function sortIds($ids, $direction) 
+	{
 		$ids = (array) $ids;
-		if(count($ids) < 2) {
+
+		if(count($ids) < 2) 
+		{
 			return $ids;
 		}
 
@@ -163,7 +196,8 @@ SQL;
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::setTranslatedDataFor()
 	 */
-	public function setTranslatedDataFor($values, $language) {
+	public function setTranslatedDataFor($values, $language) 
+	{
 		$values = (array) $values;
 		if(!$values) {
 			return;
@@ -196,9 +230,12 @@ SQL;
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::getTranslatedDataFor()
 	 */
-	public function getTranslatedDataFor($ids, $language) {
+	public function getTranslatedDataFor($ids, $language) 
+	{
 		$ids = (array) $ids;
-		if(!$ids) {
+
+		if(!$ids) 
+		{
 			return array();
 		}
 
@@ -228,9 +265,12 @@ SQL;
 	/* (non-PHPdoc)
 	 * @see \MetaModels\Attribute\TranslatedReference::unsetValueFor()
 	 */
-	public function unsetValueFor($ids, $language) {
+	public function unsetValueFor($ids, $language)
+	{
 		$ids = (array) $ids;
-		if(!$ids) {
+
+		if(!$ids) 
+		{
 			return;
 		}
 
@@ -256,7 +296,8 @@ SQL;
 	 * @param string $wildcard
 	 * @return string
 	 */
-	public static function generateWildcards(array $values, $wildcard = '?') {
+	public static function generateWildcards(array $values, $wildcard = '?') 
+	{
 		return rtrim(str_repeat($wildcard . ',', count($values)), ',');
 	}
 

@@ -1,33 +1,33 @@
 {
-	"name": "metamodels/attribute_translatedurl",
-	"description": "MetaModels attribute for translated URLs",
-	"keywords": [ "contao", "metamodels", "attribute", "url", "translatable" ],
-	"type": "contao-module",
-	"homepage": "http://now.metamodel.me/",
-	"license": "LGPL-3.0+",
-	"authors": [
+	"name":"metamodels/attribute_translatedurl",
+	"description":"MetaModels attribute for translated urls",
+	"keywords":["contao", "metamodels", "attribute", "url", "translatable"],
+	"type":"contao-module",
+	"homepage":"http://now.metamodel.me/",
+	"license":"LGPL-3.0+",
+	"authors":[
 		{
-			"name": "Christian Schiffler",
-			"email": "c.schiffler@cyberspectrum.de",
-			"homepage": "http://www.cyberspectrum.de",
-			"role": "Developer"
+			"name":"Christian Schiffler",
+			"email":"c.schiffler@cyberspectrum.de",
+			"homepage":"http://www.cyberspectrum.de",
+			"role":"Developer"
 		},
 		{
-			"name": "Andreas Isaak",
-			"email": "info@andreas-isaak.de",
-			"homepage": "http://www.andreas-isaak.de",
-			"role": "Developer"
+			"name":"Andreas Isaak",
+			"email":"info@andreas-isaak.de",
+			"homepage":"http://www.andreas-isaak.de",
+			"role":"Developer"
 		},
 		{
-			"name": "Stefan Heimes",
-			"email": "stefan_heimes@hotmail.com",
-			"role": "Developer"
+			"name":"Stefan Heimes",
+			"email":"stefan_heimes@hotmail.com",
+			"role":"Developer"
 		},
 		{
-			"name": "Christian de la Haye",
-			"email": "service@delahaye.de",
-			"homepage": "http://www.delahaye.de/",
-			"role": "Developer"
+			"name":"Christian de la Haye",
+			"email":"service@delahaye.de",
+			"homepage":"http://www.delahaye.de/",
+			"role":"Developer"
 		},
 		{
 			"name": "Oliver Hoff",
@@ -36,33 +36,44 @@
 			"role": "Developer"
 		}
 	],
-	"support": {
-		"email": "mail@metamodel.me",
-		"issues": "https://github.com/backbone87/metamodels-attribute_translatedurl/issues",
-		"wiki": "http://de.contaowiki.org/MetaModels",
-		"irc": "irc://irc.freenode.org/contao.mm",
-		"source": "https://github.com/backbone87/metamodels-attribute_translatedurl"
+	"support":{
+		"email":"mail@metamodel.me",
+		"issues":"https://github.com/MetaModels/metamodelsattribute_translatedurl/issues",
+		"wiki":"http://de.contaowiki.org/MetaModels",
+		"irc":"irc://irc.freenode.org/contao.mm",
+		"source":"https://github.com/MetaModels/metamodelsattribute_translatedurl"
 	},
-	"require": {
-		"php": ">=5.3",
-		"contao/core": ">=3.1,<4",
+	"require":{
+		"php":">=5.3",
+		"contao/core": ">=2.11,<4.0",
 		"contao-community-alliance/composer-installer": "*",
-		"metamodels/core": ">=1,<2",
-		"metamodels/attribute_url": ">=1,<2"
+		"metamodels/core":"~1"
 	},
 	"require-dev": {
+		"metamodels/php-coding-standard":"dev-master",
 		"cyberspectrum/contao-toolbox": "dev-master"
 	},
-	"autoload": {
-		"psr-0": {
-			"MetaModels": "src/"
-		}
+	"conflict": {
+		"contao/core": "3.0.*"
 	},
-	"extra": {
+	"autoload": {
+		"classmap": ["src"]
+	},
+	"extra":{
 		"contao": {
-			"symlinks": {
-				"contao-module":"system/modules/metamodelsattribute_translatedurl"
+			"symlinks":{
+				"src/system/modules/metamodelsattribute_translatedurl":"system/modules/metamodelsattribute_translatedurl"
+			},
+			"transifex": {
+				"project": "metamodels",
+				"prefix": "attribute_translatedurl-",
+				"languages_cto": "src/system/modules/metamodelsattribute_translatedurl/languages",
+				"languages_tx": ".tx"
 			}
+		},
+		"branch-alias": {
+			"dev-master": "1.0.x-dev",
+			"dev-contao3": "1.1.x-dev"
 		}
 	}
 }
