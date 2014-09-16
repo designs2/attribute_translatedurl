@@ -73,7 +73,7 @@
 			}
 		},
 		"branch-alias": {
-			"dev-contao3": "1.1.x-dev"
+			"dev-tng": "2.0.x-dev"
 		}
 	}
 }
