@@ -7,6 +7,7 @@
  * data in each collection.
  *
  * PHP version 5
+ *
  * @package    MetaModels
  * @subpackage AttributeTranslatedUrl
  * @author     Andreas Isaak <info@andreas-isaak.de>
