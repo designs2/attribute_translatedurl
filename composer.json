@@ -68,5 +68,6 @@
     "branch-alias": {
       "dev-tng": "2.0.x-dev"
     }
-  }
+  },
+  "minimum-stability": "dev"
 }
