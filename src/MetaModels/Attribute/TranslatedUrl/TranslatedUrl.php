@@ -18,7 +18,9 @@
 
 namespace MetaModels\Attribute\TranslatedUrl;
 
+use ContaoCommunityAlliance\DcGeneral\Contao\View\Contao2BackendView\Event\ManipulateWidgetEvent;
 use MetaModels\Attribute\TranslatedReference;
+use MetaModels\DcGeneral\Events\UrlWizardHandler;
 
 /**
  * @package    MetaModels
@@ -89,20 +91,26 @@ class TranslatedUrl extends TranslatedReference
 	{
 		$field = parent::getFieldDefinition($overrides);
 
-		$field['inputType'] = 'text';
-		$field['eval']['tl_class'] .= ' wizard inline';
+		$arrFieldDef['inputType'] = 'text';
+		if (!isset($arrFieldDef['eval']['tl_class'])) {
+			$arrFieldDef['eval']['tl_class'] = '';
+		}
+		$arrFieldDef['eval']['tl_class'] .= ' wizard inline';
 
-		if($this->get('trim_title')) 
-		{
-			$field['wizard']['pagePicker'] = array('MetaModels\Helper\Url\Url', 'singlePagePicker');
-		} else {
-			$field['eval']['size'] = 2;
-			$field['eval']['multiple'] = true;
-			$field['eval']['tl_class'] .= ' metamodelsattribute_url';
-			$field['wizard']['pagePicker'] = array('MetaModels\Helper\Url\Url', 'multiPagePicker');
+		if (!$this->get('trim_title')) {
+			$arrFieldDef['eval']['size']      = 2;
+			$arrFieldDef['eval']['multiple']  = true;
+			$arrFieldDef['eval']['tl_class'] .= ' metamodelsattribute_url';
 		}
 
-		return $field;
+		/** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
+		$dispatcher = $this->getMetaModel()->getServiceContainer()->getEventDispatcher();
+		$dispatcher->addListener(
+			ManipulateWidgetEvent::NAME,
+			array(new UrlWizardHandler($this->getMetaModel(), $this->getColName()), 'getWizard')
+		);
+
+		return $arrFieldDef;
 	}
 
 	/* (non-PHPdoc)
