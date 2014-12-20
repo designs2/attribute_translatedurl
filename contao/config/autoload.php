@@ -19,17 +19,9 @@
  */
 
 /**
- * Register the classes
- */
-ClassLoader::addClasses(array
-(
-	'MetaModels\Attribute\TranslatedUrl\TranslatedUrl'     => 'system/modules/metamodelsattribute_translatedurl/MetaModels/Attribute/TranslatedUrl/TranslatedUrl.php'
-));
-
-/**
  * Register the templates
  */
 TemplateLoader::addFiles(array
 (
-	'mm_attr_translatedurl' => 'system/modules/metamodelsattribute_translatedurl/templates',
+    'mm_attr_translatedurl' => 'system/modules/metamodelsattribute_translatedurl/templates',
 ));
