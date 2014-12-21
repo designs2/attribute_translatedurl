@@ -7,14 +7,21 @@
  * data in each collection.
  *
  * PHP version 5
+ *
  * @package    MetaModels
- * @subpackage AttributeTranslatedUrl
- * @author     Oliver Hoff <oliver@hofff.com>
+ * @subpackage AttributeUrl
  * @author     Andreas Isaak <info@andreas-isaak.de>
+ * @author     Christopher Boelter <christopher@boelter.eu>
+ * @author     Oliver Hoff <oliver@hofff.com>
  * @copyright  The MetaModels team.
  * @license    LGPL.
  * @filesource
  */
 
-$GLOBALS['METAMODELS']['attributes']['translatedurl']['class'] = 'MetaModels\Attribute\TranslatedUrl\TranslatedUrl';
-$GLOBALS['METAMODELS']['attributes']['translatedurl']['image'] = 'system/modules/metamodelsattribute_translatedurl/html/url.png';
+/**
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+    'mm_attr_translatedurl' => 'system/modules/metamodelsattribute_translatedurl/templates',
+));

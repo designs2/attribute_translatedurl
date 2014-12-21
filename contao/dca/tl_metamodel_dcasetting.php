@@ -7,13 +7,22 @@
  * data in each collection.
  *
  * PHP version 5
+ *
  * @package    MetaModels
  * @subpackage AttributeTranslatedUrl
- * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Andreas Isaak <info@andreas-isaak.de>
+ * @author     Christopher Boelter <christopher@boelter.eu>
  * @copyright  The MetaModels team.
  * @license    LGPL.
  * @filesource
  */
 
-$GLOBALS['TL_DCA']['tl_metamodel_rendersetting']['metapalettes']['translatedurl extends url'] = array();
+$GLOBALS['TL_DCA']['tl_metamodel_dcasetting']['metasubselectpalettes']['attr_id']['translatedurl'] = array
+(
+    'presentation' => array(
+        'tl_class',
+    ),
+    'functions'    => array(
+        'mandatory',
+    ),
+);
