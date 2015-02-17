@@ -10,6 +10,7 @@
  *
  * @package    MetaModels
  * @subpackage AttributeTranslatedUrl
+ * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author     Oliver Hoff <oliver@hofff.com>
  * @author     Andreas Isaak <info@andreas-isaak.de>
  * @author     Christopher Boelter <christopher@boelter.eu>
@@ -129,29 +130,26 @@ class TranslatedUrl extends TranslatedReference
      */
     public function searchForInLanguages($pattern, $languages = array())
     {
-        $pattern   = str_replace(array('*', '?'), array('%', '_'), $pattern);
-        $joinTable = $this->getValueTable();
+        $pattern           = str_replace(array('*', '?'), array('%', '_'), $pattern);
+        $languageCondition = '';
 
         $languages = (array) $languages;
         if ($languages) {
-            $languageWildcards = self::generateWildcards($languages);
-            $languageCondition = 'AND language IN (' . $languageWildcards . ')';
+            $languageCondition = 'AND language IN (' . $this->parameterMask($languages) . ')';
         }
 
-        $sql = <<<SQL
-SELECT	DISTINCT item_id AS id
-FROM	$joinTable
-WHERE	(title LIKE ? OR href LIKE ?)
-AND		att_id = ?
-$languageCondition
-SQL;
+        $sql = sprintf(
+            'SELECT DISTINCT item_id AS id FROM %1$s WHERE (title LIKE ? OR href LIKE ?) AND att_id = ?%2$s',
+            $this->getValueTable(),
+            $languageCondition
+        );
 
         $params[] = $pattern;
         $params[] = $pattern;
         $params[] = $this->get('id');
         $params   = array_merge($params, $languages);
 
-        $result = \Database::getInstance()->prepare($sql)->executeUncached($params);
+        $result = $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
 
         return $result->fetchEach('id');
     }
@@ -167,37 +165,34 @@ SQL;
             return $ids;
         }
 
-        $modelTable                         = $this->getMetaModel()->getTableName();
-        $joinTable                          = $this->getValueTable();
-        $direction  == 'DESC' || $direction = 'ASC';
+        if ($direction !== 'DESC') {
+            $direction = 'ASC';
+        }
 
-        $idWildcards = self::generateWildcards($ids);
-        $sql         = <<<SQL
-SELECT		_model.id
-FROM		$modelTable		AS _model
-
-LEFT JOIN	$joinTable		AS _active		ON _active.item_id = _model.id
-											AND _active.att_id = ?
-											AND _active.language = ?
-
-LEFT JOIN	$joinTable		AS _fallback	ON _active.item_id IS NULL
-											AND _fallback.item_id = _model.id
-											AND _fallback.att_id = ?
-											AND _fallback.language = ?
-
-WHERE		_model.id IN ($idWildcards)
-
-ORDER BY	COALESCE(_active.title, _active.href, _fallback.title, _fallback.href) $direction,
-			COALESCE(_active.href, _fallback.href) $direction
-SQL;
+        $sql = sprintf(
+            'SELECT _model.id FROM %1$s AS _model
+            LEFT JOIN %2$s AS _active ON _active.item_id=_model.id
+                                        AND _active.att_id=?
+                                        AND _active.language=?
+            LEFT JOIN %2$s AS _fallback ON _active.item_id IS NULL
+                                        AND _fallback.item_id=_model.id
+                                        AND _fallback.att_id=?
+                                        AND _fallback.language=?
+            WHERE _model.id IN (%3$s)
+            ORDER BY COALESCE(_active.title, _active.href, _fallback.title, _fallback.href) %4$s,
+                     COALESCE(_active.href, _fallback.href) %4$s',
+            $this->getMetaModel()->getTableName(),
+            $this->getValueTable(),
+            $this->parameterMask($ids),
+            $direction
+        );
 
         $params[] = $this->get('id');
         $params[] = $this->getMetaModel()->getActiveLanguage();
         $params[] = $this->get('id');
         $params[] = $this->getMetaModel()->getFallbackLanguage();
         $params   = array_merge($params, $ids);
-
-        $result = \Database::getInstance()->prepare($sql)->execute($params);
+        $result   = $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
 
         return $result->fetchEach('id');
     }
@@ -214,16 +209,14 @@ SQL;
 
         $this->unsetValueFor(array_keys($values), $language);
 
-        $wildcards = self::generateWildcards($values, '(?,?,?,?,?,?)');
-        $joinTable = $this->getValueTable();
-        $time      = time();
+        $sql = sprintf(
+            'INSERT INTO %1$s (att_id, item_id, language, tstamp, href, title) VALUES %2$s',
+            $this->getValueTable(),
+            rtrim(str_repeat('(?,?,?,?,?,?),', count($values)), ',')
+        );
 
-        $sql = <<<SQL
-INSERT INTO	$joinTable
-			(att_id, item_id, language, tstamp, href, title)
-VALUES		$wildcards
-SQL;
-
+        $time   = time();
+        $params = array();
         foreach ($values as $id => $value) {
             $params[] = $this->get('id');
             $params[] = $id;
@@ -233,7 +226,7 @@ SQL;
             $params[] = strlen($value['title']) ? $value['title'] : null;
         }
 
-        \Database::getInstance()->prepare($sql)->executeUncached($params);
+        $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
     }
 
     /**
@@ -247,27 +240,27 @@ SQL;
             return array();
         }
 
-        $idWildcards = self::generateWildcards($ids);
-        $joinTable   = $this->getValueTable();
-
-        $sql = <<<SQL
-SELECT		item_id AS id, href, title
-FROM		$joinTable
-WHERE		att_id = ?
-AND			language = ?
-AND			item_id IN ($idWildcards)
-SQL;
+        $sql = sprintf(
+            'SELECT item_id AS id, href, title
+            FROM %1$s
+            WHERE att_id=?
+            AND language=?
+            AND item_id IN (%2$s)',
+            $this->getValueTable(),
+            $this->parameterMask($ids)
+        );
 
         $params[] = $this->get('id');
         $params[] = $language;
         $params   = array_merge($params, $ids);
 
-        $result = \Database::getInstance()->prepare($sql)->executeUncached($params);
+        $result = $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
+        $values = array();
         while ($result->next()) {
             $values[$result->id] = array('href' => $result->href, 'title' => $result->title);
         }
 
-        return (array) $values;
+        return $values;
     }
 
     /**
@@ -281,33 +274,19 @@ SQL;
             return;
         }
 
-        $idWildcards = self::generateWildcards($ids);
-        $joinTable   = $this->getValueTable();
-
-        $sql = <<<SQL
-DELETE FROM	$joinTable
-WHERE		att_id = ?
-AND			language = ?
-AND			item_id IN ($idWildcards)
-SQL;
+        $sql = sprintf(
+            'DELETE FROM %1$s
+            WHERE att_id=?
+            AND language=?
+            AND item_id IN (%2$s)',
+            $this->getValueTable(),
+            $this->parameterMask($ids)
+        );
 
         $params[] = $this->get('id');
         $params[] = $language;
         $params   = array_merge($params, $ids);
 
-        \Database::getInstance()->prepare($sql)->executeUncached($params);
-    }
-
-    /**
-     * Generate the SQL-Statement wildcards.
-     *
-     * @param array  $values   The values for the query.
-     * @param string $wildcard The wildcard sign for the query.
-     *
-     * @return string
-     */
-    public static function generateWildcards(array $values, $wildcard = '?')
-    {
-        return rtrim(str_repeat($wildcard . ',', count($values)), ',');
+        $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
     }
 }
