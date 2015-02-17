@@ -59,7 +59,7 @@
       "transifex": {
         "project": "metamodels",
         "prefix": "attribute_translatedurl-",
-        "languages_cto": "src/system/modules/metamodelsattribute_translatedurl/languages",
+        "languages_cto": "contao/languages",
         "languages_tx": ".tx"
       }
     },
