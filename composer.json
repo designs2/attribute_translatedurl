@@ -1,5 +1,5 @@
 {
-  "name": "metamodels/attribute_translatedurl",
+  "name": "designs2/attribute_translatedurl",
   "description": "MetaModels attribute for translated urls",
   "keywords": [
     "contao",
@@ -29,19 +29,19 @@
     "issues": "https://github.com/MetaModels/metamodelsattribute_translatedurl/issues",
     "wiki": "http://de.contaowiki.org/MetaModels",
     "irc": "irc://irc.freenode.org/contao.mm",
-    "source": "https://github.com/MetaModels/metamodelsattribute_translatedurl"
+    "source": "https://github.com/designs2/metamodelsattribute_translatedurl"
   },
   "require": {
     "php": ">=5.3",
     "contao/core": ">=3.2,<3.6",
-    "contao-community-alliance/composer-plugin": "~2.0",
-    "metamodels/core": "~2.0",
-    "metamodels/attribute_url": "~2.0"
+    "contao-community-alliance/composer-plugin": "*",
+    "designs2/core": "*",
+    "designs2/attribute_url": "*"
   },
   "require-dev": {
-    "cyberspectrum/contao-toolbox": "~0.6",
-    "phpcq/all-tasks": "~1.0",
-    "metamodels/base-unit-tests": "~1.0"
+    "cyberspectrum/contao-toolbox": "*",
+    "phpcq/all-tasks": "*",
+    "metamodels/base-unit-tests": "*"
   },
   "conflict": {
     "contao/core": "3.4.0"
