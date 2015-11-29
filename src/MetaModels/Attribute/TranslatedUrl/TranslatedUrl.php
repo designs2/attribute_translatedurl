@@ -135,7 +135,7 @@ class TranslatedUrl extends TranslatedReference
 
         $languages = (array) $languages;
         if ($languages) {
-            $languageCondition = 'AND language IN (' . $this->parameterMask($languages) . ')';
+            $languageCondition = 'AND langcode IN (' . $this->parameterMask($languages) . ')';
         }
 
         $sql = sprintf(
@@ -173,11 +173,11 @@ class TranslatedUrl extends TranslatedReference
             'SELECT _model.id FROM %1$s AS _model
             LEFT JOIN %2$s AS _active ON _active.item_id=_model.id
                                         AND _active.att_id=?
-                                        AND _active.language=?
+                                        AND _active.langcode=?
             LEFT JOIN %2$s AS _fallback ON _active.item_id IS NULL
                                         AND _fallback.item_id=_model.id
                                         AND _fallback.att_id=?
-                                        AND _fallback.language=?
+                                        AND _fallback.langcode=?
             WHERE _model.id IN (%3$s)
             ORDER BY COALESCE(_active.title, _active.href, _fallback.title, _fallback.href) %4$s,
                      COALESCE(_active.href, _fallback.href) %4$s',
@@ -210,7 +210,7 @@ class TranslatedUrl extends TranslatedReference
         $this->unsetValueFor(array_keys($values), $language);
 
         $sql = sprintf(
-            'INSERT INTO %1$s (att_id, item_id, language, tstamp, href, title) VALUES %2$s',
+            'INSERT INTO %1$s (att_id, item_id, langcode, tstamp, href, title) VALUES %2$s',
             $this->getValueTable(),
             rtrim(str_repeat('(?,?,?,?,?,?),', count($values)), ',')
         );
@@ -244,7 +244,7 @@ class TranslatedUrl extends TranslatedReference
             'SELECT item_id AS id, href, title
             FROM %1$s
             WHERE att_id=?
-            AND language=?
+            AND langcode=?
             AND item_id IN (%2$s)',
             $this->getValueTable(),
             $this->parameterMask($ids)
@@ -277,7 +277,7 @@ class TranslatedUrl extends TranslatedReference
         $sql = sprintf(
             'DELETE FROM %1$s
             WHERE att_id=?
-            AND language=?
+            AND langcode=?
             AND item_id IN (%2$s)',
             $this->getValueTable(),
             $this->parameterMask($ids)
