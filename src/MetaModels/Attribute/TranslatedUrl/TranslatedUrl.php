@@ -229,7 +229,7 @@ class TranslatedUrl extends TranslatedReference
         $this->getMetaModel()->getServiceContainer()->getDatabase()->prepare($sql)->execute($params);
     }
 
-    /**
+    /** 
      * {@inheritdoc}
      */
     public function getTranslatedDataFor($ids, $language)
